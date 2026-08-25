@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E GAMING STORE | Centro Oficial de Recargas</title>
+    <!-- Iconos FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Vinculación del CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <span>⚡ ¡Recargas instantáneas las 24 horas del día!</span>
+        <div class="top-bar-links">
+            <a href="https://whatsapp.com/channel/TU_CANAL_AQUI" target="_blank" class="top-link wa"><i class="fa-brands fa-whatsapp"></i> Canal WhatsApp</a>
+            <a href="https://tiktok.com/@TU_USUARIO_TIKTOK" target="_blank" class="top-link tt"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <header class="navbar">
+        <a href="index.html" class="nav-brand">
+            <img src="img/logo.png" alt="E Gaming Logo" class="nav-logo-img">
+            <span class="nav-brand-text">E GAMING <span>STORE</span></span>
+        </a>
+
+        <div class="nav-search" style="position: relative;">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="searchInput" placeholder="Buscar juego, tarjeta de regalo..." oninput="filtrarJuegosDirecto()" autocomplete="off">
+            <div id="searchSuggestions" class="search-suggestions"></div>
+        </div>
+
+        <div class="nav-actions">
+            <!-- Botón Ingresar para visitantes -->
+            <button class="btn-login" id="btnLoginTrigger" onclick="openAuthModal()" style="
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 22px;
+                background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+                color: #0d1117;
+                border: none;
+                border-radius: 12px;
+                font-weight: 800;
+                font-size: 0.95rem;
+                letter-spacing: 0.5px;
+                cursor: pointer;
+                box-shadow: 0 0 15px rgba(79, 172, 254, 0.4);
+                transition: all 0.3s ease;
+                text-transform: uppercase;">
+                <i class="fa-solid fa-user-astronaut" style="font-size: 1.1rem; color: #0d1117;"></i> Ingresar
+            </button>
+
+            <!-- Menú Perfil de Usuario -->
+            <div class="user-profile-menu" id="userProfileMenu" style="display: none;">
+                <div class="user-pill" onclick="toggleDropdown()">
+                    <div class="user-avatar-mini" id="navAvatar">J</div>
+                    <span class="user-name-mini" id="navUsername">Usuario</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; color: var(--blue-neon, #00f2fe);"></i>
+                </div>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <!-- Solo visible si se inicia sesión con JMRA2208@GMAIL.COM -->
+                    <a href="admin.html" id="adminDropdownItem" class="dropdown-item" style="color: #ffb703; font-weight: bold; display: none;">
+                        <i class="fa-solid fa-user-shield"></i> Panel Admin
+                    </a>
+                    <a href="perfil.html" class="dropdown-item">
+                        <i class="fa-solid fa-id-card"></i> Mi Perfil
+                    </a>
+                    <a href="compras.html" class="dropdown-item">
+                        <i class="fa-solid fa-receipt"></i> Mis Compras
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item" onclick="logoutUser()" style="color: #ff4b2b; cursor: pointer;">
+                        <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Modal Autenticación Gamer Pro -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-card-gamer">
+            <div class="close-modal-btn" onclick="closeAuthModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+
+            <div class="modal-side-banner">
+                <div class="modal-brand-header">
+                    <img src="img/logo.png" alt="E Gaming Logo" class="modal-brand-logo">
+                    <div class="modal-brand-name">E GAMING <span>STORE</span></div>
+                </div>
+
+                <div class="banner-content">
+                    <h3 class="banner-title">ÚNETE A LA ÉLITE GAMER</h3>
+                    <p class="banner-desc">Crea tu cuenta para acceder a promociones exclusivas, acumular historial y recargar en segundos.</p>
+                    
+                    <div class="banner-features">
+                        <div class="feature-item">
+                            <i class="fa-solid fa-bolt-lightning"></i>
+                            <span>Entregas automatizadas e inmediatas</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>Garantía y soporte prioritario 24/7</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="font-size: 0.72rem; color: rgba(255,255,255,0.4); z-index: 2;">
+                    E Gaming Store © 2026
+                </div>
+            </div>
+
+            <div class="modal-form-side">
+                <div class="mobile-modal-brand">
+                    <img src="img/logo.png" alt="Logo">
+                    <span>E GAMING <span>STORE</span></span>
+                </div>
+
+                <div class="auth-tabs-container">
+                    <button class="auth-tab-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')">
+                        <i class="fa-solid fa-right-to-bracket"></i> INGRESAR
+                    </button>
+                    <button class="auth-tab-btn" id="tabRegisterBtn" onclick="switchAuthTab('register')">
+                        <i class="fa-solid fa-user-plus"></i> REGISTRO
+                    </button>
+                </div>
+
+                <!-- Form Login -->
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="input-field-group">
+                        <label>Correo Electrónico</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-envelope icon-prefix"></i>
+                            <input type="email" id="loginEmail" placeholder="ejemplo@gamer.com" required>
+                        </div>
+                    </div>
+
+                    <div class="input-field-group">
+                        <label>Contraseña</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock icon-prefix"></i>
+                            <input type="password" id="loginPassword" placeholder="••••••••" required>
+                            <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('loginPassword', this)"></i>
+                        </div>
+                    </div>
+
+                    <label class="checkbox-container">
+                        <input type="checkbox" checked> Recordar mi sesión
+                    </label>
+
+                    <button type="submit" class="btn-gamer-submit">
+                        ENTRAR A MI CUENTA <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <!-- Form Registro -->
+                <form id="registerForm" style="display: none;" onsubmit="handleRegister(event)">
+                    <div class="input-field-group">
+                        <label>Usuario / Gamertag</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-user-astronaut icon-prefix"></i>
+                            <input type="text" id="regName" placeholder="Ej: SharkGamer99" required>
+                        </div>
+                    </div>
+
+                    <div class="input-field-group">
+                        <label>Correo Electrónico</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-envelope icon-prefix"></i>
+                            <input type="email" id="regEmail" placeholder="tu@email.com" required>
+                        </div>
+                    </div>
+
+                    <div class="input-field-group">
+                        <label>Teléfono (WhatsApp)</label>
+                        <div class="input-wrapper">
+                            <i class="fa-brands fa-whatsapp icon-prefix"></i>
+                            <input type="tel" id="regPhone" placeholder="+58 412 0000000" required>
+                        </div>
+                    </div>
+
+                    <div class="input-field-group">
+                        <label>Contraseña</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock icon-prefix"></i>
+                            <input type="password" id="regPassword" placeholder="Crea una contraseña segura" required>
+                            <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('regPassword', this)"></i>
+                        </div>
+                    </div>
+
+                    <label class="checkbox-container">
+                        <input type="checkbox" required> Acepto los términos y servicio oficial
+                    </label>
+
+                    <button type="submit" class="btn-gamer-submit">
+                        CREAR MI CUENTA <i class="fa-solid fa-bolt"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Perfil -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-box">
+            <i class="fa-solid fa-xmark close-modal-btn" onclick="closeProfileModal()"></i>
+            <h3 style="margin-bottom: 20px; color: var(--blue-neon, #00f2fe); font-size: 1.2rem;">
+                <i class="fa-solid fa-user-gear"></i> Perfil de Usuario
+            </h3>
+
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div class="user-avatar-mini" id="modalAvatar" style="width: 60px; height: 60px; font-size: 1.5rem; margin: 0 auto 10px auto;">U</div>
+                <h4 id="profileDisplayName" style="font-size: 1.1rem;">Nombre Usuario</h4>
+                <span id="profileDisplayEmail" style="font-size: 0.8rem; color: #8a99ad;">correo@email.com</span>
+            </div>
+
+            <div class="input-field-group">
+                <label>ID de Cliente</label>
+                <div class="input-wrapper">
+                    <input type="text" id="profileClientID" readonly style="background: rgba(0,0,0,0.3); opacity: 0.7; padding-left: 15px;">
+                </div>
+            </div>
+            <div class="input-field-group">
+                <label>Número de WhatsApp</label>
+                <div class="input-wrapper">
+                    <input type="text" id="profilePhone" readonly style="background: rgba(0,0,0,0.3); opacity: 0.7; padding-left: 15px;">
+                </div>
+            </div>
+
+            <button class="btn-gamer-submit" onclick="closeProfileModal()" style="background: rgba(255,255,255,0.1); box-shadow: none;">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Hero Banner -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-text">
+                <div class="hero-top-tags">
+                    <span class="hero-badge"><i class="fa-solid fa-bolt"></i> PLATAFORMA OFICIAL</span>
+                    <span class="hero-badge-fire"><i class="fa-solid fa-fire"></i> OFERTAS ACTIVAS</span>
+                </div>
+
+                <h1 class="hero-title">E GAMING STORE</h1>
+                <p class="hero-desc">El centro de recargas #1. Procesa tus cargas de Diamantes, Pases e Ítems en segundos con verificación inmediata y tasa preferencial.</p>
+
+                <div class="hero-cta-group">
+                    <a href="#catalogo" class="btn-primary-glow">
+                        <i class="fa-solid fa-gamepad"></i> RECARGAR AHORA
+                    </a>
+                    <a href="https://whatsapp.com/channel/TU_CANAL_AQUI" target="_blank" class="btn-secondary-outline">
+                        <i class="fa-brands fa-whatsapp"></i> CANAL OFICIAL
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-mascot-wrapper">
+                <div class="floating-badge floating-badge-top">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                    <div>
+                        <div style="color: #fff;">Entrega Exprés</div>
+                        <div style="color: #8a99ad; font-size: 0.7rem;">Promedio: 2 min</div>
+                    </div>
+                </div>
+
+                <img src="img/mascota.png" alt="Mascota Tiburón E-Gaming" class="hero-mascot">
+
+                <div class="floating-badge floating-badge-bottom">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <div>
+                        <div style="color: #fff;">100% Garantizado</div>
+                        <div style="color: #8a99ad; font-size: 0.7rem;">Soporte directo 24/7</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comunidad -->
+    <section class="community-section">
+        <h2 class="section-title">ÚNETE A NUESTRA COMUNIDAD</h2>
+        <div class="cards-grid">
+            <a href="https://whatsapp.com/channel/TU_CANAL_AQUI" target="_blank" class="info-card">
+                <div class="card-icon wa-icon"><i class="fa-brands fa-whatsapp"></i></div>
+                <div class="card-content">
+                    <h3>Canal Oficial WhatsApp</h3>
+                    <p>Recibe ofertas relámpago, alertas de saldo y sorteos semanales.</p>
+                    <span class="btn-card-link">Unirme al Canal ➔</span>
+                </div>
+            </a>
+
+            <a href="https://tiktok.com/@TU_USUARIO_TIKTOK" target="_blank" class="info-card">
+                <div class="card-icon tt-icon"><i class="fa-brands fa-tiktok"></i></div>
+                <div class="card-content">
+                    <h3>Síguenos en TikTok</h3>
+                    <p>Mira comprobantes de recargas en vivo y contenido exclusivo eSports.</p>
+                    <span class="btn-card-link">Seguir en TikTok ➔</span>
+                </div>
+            </a>
+
+            <a href="https://wa.me/TU_NUMERO_TELEFONO" target="_blank" class="info-card">
+                <div class="card-icon sp-icon"><i class="fa-solid fa-headset"></i></div>
+                <div class="card-content">
+                    <h3>Atención al Cliente 24/7</h3>
+                    <p>¿Tienes dudas con tu pago o ID? Escríbenos directo para atención humana.</p>
+                    <span class="btn-card-link">Contactar Soporte ➔</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Catálogo -->
+    <section class="games-section" id="catalogo">
+        <h2 class="section-title">JUEGOS Y TARJETAS DESTACADAS</h2>
+
+        <div class="games-grid" id="gamesGrid">
+            <a href="blood-strike.html" class="game-card" data-title="blood strike oro recarga fps pases">
+                <div class="game-thumb">
+                    <span class="badge-status">INSTANTÁNEO</span>
+                    <img src="img/Blood Strike.png" alt="Blood Strike">
+                </div>
+                <div class="game-info">
+                    <h4>BLOOD STRIKE</h4>
+                    <span class="arrow-btn"><i class="fa-solid fa-chevron-right"></i></span>
+                </div>
+            </a>
+
+            <a href="freefire.html" class="game-card" data-title="free fire diamantes ff pase de nivel semanal mensual garena">
+                <div class="game-thumb">
+                    <span class="badge-status">OFERTA ID</span>
+                    <img src="img/Free Fire.png" alt="Free Fire">
+                </div>
+                <div class="game-info">
+                    <h4>FREE FIRE</h4>
+                    <span class="arrow-btn"><i class="fa-solid fa-chevron-right"></i></span>
+                </div>
+            </a>
+
+            <a href="roblox.html" class="game-card" data-title="roblox robux gift card tarjeta de regalo pin digital">
+                <div class="game-thumb">
+                    <span class="badge-status">GIFT CARD</span>
+                    <img src="img/roblox.png" alt="Roblox">
+                </div>
+                <div class="game-info">
+                    <h4>ROBLOX (ROBUX)</h4>
+                    <span class="arrow-btn"><i class="fa-solid fa-chevron-right"></i></span>
+                </div>
+            </a>
+        </div>
+
+        <div id="noResults" style="display: none; text-align: center; padding: 40px; color: #8a99ad;">
+            <i class="fa-solid fa-ghost" style="font-size: 2.5rem; color: #00f2fe; margin-bottom: 10px;"></i>
+            <p>No encontramos ningún juego o tarjeta con ese nombre.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p><strong>E GAMING STORE</strong> © 2026 - Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Scripts de la Aplicación -->
+    <script>
+        // 1. Filtro del catálogo manteniendo la estructura Grid exacta
+        function filtrarJuegosDirecto() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('#gamesGrid .game-card');
+            const noResults = document.getElementById('noResults');
+            let hasVisible = false;
+
+            cards.forEach(card => {
+                const dataTitle = card.getAttribute('data-title') || '';
+                const h4Text = card.querySelector('h4') ? card.querySelector('h4').textContent : '';
+                const match = dataTitle.toLowerCase().includes(filter) || h4Text.toLowerCase().includes(filter);
+
+                if (match) {
+                    card.style.visibility = 'visible';
+                    card.style.opacity = '1';
+                    card.style.pointerEvents = 'auto';
+                    hasVisible = true;
+                } else {
+                    card.style.visibility = 'hidden';
+                    card.style.opacity = '0';
+                    card.style.pointerEvents = 'none';
+                }
+            });
+
+            if (noResults) {
+                noResults.style.display = (hasVisible || filter === '') ? 'none' : 'block';
+            }
+        }
+
+        // 2. Control exclusivo del Panel Admin por correo asignado
+        document.addEventListener('DOMContentLoaded', () => {
+            const CORREO_ADMIN_AUTORIZADO = "jmra2208@gmail.com";
+
+            const usuarioActivo = JSON.parse(localStorage.getItem('usuarioActivo'));
+            const adminBtn = document.getElementById('adminDropdownItem');
+
+            if (usuarioActivo && usuarioActivo.email) {
+                if (usuarioActivo.email.toLowerCase().trim() === CORREO_ADMIN_AUTORIZADO.toLowerCase()) {
+                    adminBtn.style.display = 'flex';
+                } else {
+                    adminBtn.style.display = 'none';
+                }
+            } else {
+                adminBtn.style.display = 'none';
+            }
+        });
+    </script>
+
+    <!-- Vinculación del JS Principal -->
+    <script src="js/main.js"></script>
+</body>
+</html>

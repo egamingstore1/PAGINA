@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Gaming - Finalizar Recarga</title>
+    <!-- FontAwesome Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #07090e;
+            --card-bg: rgba(21, 26, 38, 0.75);
+            --card-border: rgba(0, 210, 255, 0.2);
+            --blue-neon: #00d2ff;
+            --purple-neon: #9d4edd;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --success-color: #00ff88;
+            --error-color: #ff4d4d;
+            --accent-glow: rgba(0, 210, 255, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 210, 255, 0.08) 0%, transparent 40%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 15px;
+        }
+
+        .header-nav {
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .btn-back, .btn-link {
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-back i {
+            color: var(--blue-neon);
+            transition: transform 0.2s ease;
+        }
+
+        .btn-back:hover {
+            border-color: var(--blue-neon);
+            box-shadow: 0 0 15px var(--accent-glow);
+            color: #fff;
+        }
+
+        .btn-back:hover i {
+            transform: translateX(-3px);
+        }
+
+        .btn-link:hover {
+            border-color: var(--purple-neon);
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.2);
+            color: #fff;
+        }
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        @media (min-width: 768px) {
+            .checkout-grid {
+                grid-template-columns: 1fr 1.15fr;
+            }
+        }
+
+        .step-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue-neon), var(--purple-neon));
+        }
+
+        .step-title {
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--blue-neon), var(--purple-neon));
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 800;
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+        }
+
+        .bank-info-box {
+            background: rgba(11, 14, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 15px;
+        }
+
+        .bank-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.92rem;
+        }
+
+        .bank-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .bank-row:first-child {
+            padding-top: 0;
+        }
+
+        .bank-row span {
+            color: var(--text-muted);
+        }
+
+        .bank-row strong {
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-icon {
+            color: var(--blue-neon);
+            cursor: pointer;
+            font-size: 0.95rem;
+            padding: 6px;
+            border-radius: 6px;
+            background: rgba(0, 210, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .copy-icon:hover {
+            transform: scale(1.1);
+            background: var(--blue-neon);
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 13px 15px;
+            background: rgba(11, 14, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--blue-neon);
+            box-shadow: 0 0 12px rgba(0, 210, 255, 0.25);
+            background: rgba(11, 14, 20, 0.95);
+        }
+
+        .summary-box {
+            background: rgba(11, 14, 20, 0.6);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        .summary-row strong {
+            color: #fff;
+        }
+
+        .summary-row.total {
+            border-top: 1px dashed rgba(255, 255, 255, 0.15);
+            padding-top: 12px;
+            margin-top: 12px;
+            margin-bottom: 0;
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .summary-row.total span:last-child {
+            color: var(--success-color);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+        }
+
+        .btn-confirm {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--blue-neon), var(--purple-neon));
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 210, 255, 0.3);
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+        }
+
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 210, 255, 0.5);
+            filter: brightness(1.1);
+        }
+
+        /* Modales */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(5, 7, 10, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: #111520;
+            border: 1px solid var(--blue-neon);
+            border-radius: 16px;
+            padding: 25px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 0 40px rgba(0, 210, 255, 0.25);
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-title {
+            color: var(--blue-neon);
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-modal-cancel {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-modal-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .btn-modal-submit {
+            flex: 1;
+            padding: 12px;
+            background: var(--success-color);
+            border: none;
+            color: #000;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-modal-submit:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Pantallas de Estado */
+        .status-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid var(--blue-neon);
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            animation: spin 0.9s linear infinite;
+            margin-bottom: 25px;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-nav" id="btnBackNav">
+        <a onclick="regresarAPaquetes()" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Volver a Paquetes
+        </a>
+        <a href="compras.html" class="btn-link">
+            <i class="fa-solid fa-receipt"></i> Mis Compras
+        </a>
+    </div>
+
+    <div class="checkout-grid" id="mainCheckout">
+        <!-- Paso 1: Datos de Pago -->
+        <div class="step-card">
+            <div class="step-title">
+                <span class="step-number">1</span> Datos de Pago Móvil
+            </div>
+            <div class="bank-info-box">
+                <div class="bank-row">
+                    <span>Banco Destino:</span>
+                    <strong>Bancaribe (0114)</strong>
+                </div>
+                <div class="bank-row">
+                    <span>Cédula / RIF:</span>
+                    <strong>
+                        <span id="copyCedula">V-12345678</span>
+                        <i class="fa-regular fa-copy copy-icon" onclick="copiarTexto('copyCedula', this)" title="Copiar"></i>
+                    </strong>
+                </div>
+                <div class="bank-row">
+                    <span>Teléfono:</span>
+                    <strong>
+                        <span id="copyTelefono">04121234567</span>
+                        <i class="fa-regular fa-copy copy-icon" onclick="copiarTexto('copyTelefono', this)" title="Copiar"></i>
+                    </strong>
+                </div>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 8px; align-items: center; line-height: 1.3;">
+                <i class="fa-solid fa-shield-halved" style="color: var(--blue-neon);"></i>
+                Transfiere el monto exacto antes de completar el reporte.
+            </p>
+        </div>
+
+        <!-- Paso 2: Formulario y Confirmación -->
+        <div class="step-card">
+            <div class="step-title">
+                <span class="step-number">2</span> Reportar Transacción
+            </div>
+
+            <div class="summary-box">
+                <div class="summary-row">
+                    <span>Juego seleccionado:</span>
+                    <strong id="chkGame">Blood Strike</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Paquete:</span>
+                    <strong id="chkPackage">---</strong>
+                </div>
+                <div class="summary-row total">
+                    <span>Monto Total:</span>
+                    <span id="chkTotalBs">0.00 Bs</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputPlayerId">ID de Jugador</label>
+                <input type="text" id="inputPlayerId" class="form-control" placeholder="Ingresa tu ID de cuenta">
+            </div>
+
+            <div class="form-group">
+                <label for="bankSelect">Banco Emisor</label>
+                <select id="bankSelect" class="form-control">
+                    <option value="">-- Selecciona tu banco --</option>
+                    <option value="Bancaribe">Bancaribe</option>
+                    <option value="Banesco">Banesco</option>
+                    <option value="Banco de Venezuela">Banco de Venezuela</option>
+                    <option value="Mercantil">Mercantil</option>
+                    <option value="Provincial">Provincial</option>
+                    <option value="Otro">Otro Banco</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="referenceNumber">Últimos 6 dígitos de Referencia</label>
+                <input type="text" id="referenceNumber" class="form-control" placeholder="Ej: 849201" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+
+            <button type="button" class="btn-confirm" onclick="abrirVerificacionModal()">
+                Confirmar Recarga
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Verificación -->
+    <div class="modal-overlay" id="modalConfirmacion">
+        <div class="modal-card">
+            <div class="modal-title"><i class="fa-solid fa-circle-check"></i> Verificar Detalles</div>
+            <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:15px; text-align:center;">
+                Asegúrate de que la referencia e ID sean correctos:
+            </p>
+            <div class="summary-box">
+                <div class="summary-row"><span>Juego:</span><strong id="modalConfirmGame">-</strong></div>
+                <div class="summary-row"><span>ID Jugador:</span><strong id="modalConfirmPlayerId">-</strong></div>
+                <div class="summary-row"><span>Paquete:</span><strong id="modalConfirmPackage">-</strong></div>
+                <div class="summary-row"><span>Banco Emisor:</span><strong id="modalConfirmBank">-</strong></div>
+                <div class="summary-row"><span>Referencia:</span><strong id="modalConfirmRef">-</strong></div>
+                <div class="summary-row total"><span>Monto:</span><span id="modalConfirmTotal">-</span></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-modal-cancel" onclick="cerrarVerificacionModal()">Corregir</button>
+                <button class="btn-modal-submit" onclick="ejecutarPagoFinal()">Procesar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Alerta -->
+    <div class="modal-overlay" id="customAlertOverlay">
+        <div class="modal-card" style="text-align: center; border-color: var(--error-color); box-shadow: 0 0 30px rgba(255, 77, 77, 0.25);">
+            <i class="fa-solid fa-circle-exclamation" style="font-size: 2.8rem; color: var(--error-color); margin-bottom: 12px;"></i>
+            <div class="modal-title" style="color: var(--error-color);">Atención</div>
+            <p id="customAlertText" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.4;"></p>
+            <button class="btn-confirm" onclick="cerrarAlerta()" style="background: var(--error-color); box-shadow: 0 0 15px rgba(255,77,77,0.3);">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Pantalla de Carga -->
+    <div class="status-screen" id="loadingScreen">
+        <div class="spinner"></div>
+        <h2 style="font-weight: 700;">Procesando Recarga</h2>
+        <p style="color: var(--text-muted); margin-top: 8px; font-size: 0.9rem;">Validando la información con el servidor...</p>
+    </div>
+
+    <!-- Pantalla de Éxito -->
+    <div class="status-screen" id="successScreen">
+        <i class="fa-solid fa-circle-check" style="font-size: 4rem; color: var(--success-color); margin-bottom: 20px; text-shadow: 0 0 20px rgba(0,255,136,0.4);"></i>
+        <h2 style="font-weight: 700; margin-bottom: 8px;">¡Orden Registrada!</h2>
+        <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem;">
+            Tu solicitud ingresó al sistema en estado <strong style="color:#fff;">PROCESANDO</strong>.
+        </p>
+        <a href="compras.html" class="btn-confirm" style="text-decoration: none; text-align: center; display: inline-block; width: auto; padding: 12px 30px;">
+            Ver Mis Compras
+        </a>
+    </div>
+
+    <script>
+        const TASA_USDT = 885.00;
+
+        window.onload = function() {
+            const game = localStorage.getItem('checkout_game') || 'Blood Strike';
+            const playerId = localStorage.getItem('checkout_playerId') || localStorage.getItem('playerId') || '';
+            const paquete = localStorage.getItem('checkout_package') || 'Paquete Estándar';
+            const priceUsd = parseFloat(localStorage.getItem('checkout_priceUsd') || '0');
+
+            const totalBs = priceUsd > 0 ? (priceUsd * TASA_USDT).toFixed(2) : (1.99 * TASA_USDT).toFixed(2);
+
+            document.getElementById('chkGame').innerText = game;
+            document.getElementById('chkPackage').innerText = paquete;
+            document.getElementById('chkTotalBs').innerText = totalBs + ' Bs';
+            
+            if (playerId) {
+                document.getElementById('inputPlayerId').value = playerId;
+            }
+        };
+
+        function regresarAPaquetes() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function mostrarAlerta(mensaje) {
+            document.getElementById('customAlertText').innerText = mensaje;
+            document.getElementById('customAlertOverlay').style.display = 'flex';
+        }
+
+        function cerrarAlerta() {
+            document.getElementById('customAlertOverlay').style.display = 'none';
+        }
+
+        function abrirVerificacionModal() {
+            const playerId = document.getElementById('inputPlayerId').value.trim();
+            const banco = document.getElementById('bankSelect').value;
+            const referencia = document.getElementById('referenceNumber').value.trim();
+
+            if (!playerId) {
+                mostrarAlerta('Ingresa tu ID de jugador para asociar los diamantes/monedas a tu cuenta.');
+                return;
+            }
+
+            if (!banco) {
+                mostrarAlerta('Selecciona el banco desde el cual realizaste la transferencia.');
+                return;
+            }
+
+            if (!referencia || referencia.length !== 6) {
+                mostrarAlerta('La referencia debe contener exactamente los últimos 6 dígitos numéricos.');
+                return;
+            }
+
+            document.getElementById('modalConfirmGame').innerText = document.getElementById('chkGame').innerText;
+            document.getElementById('modalConfirmPlayerId').innerText = playerId;
+            document.getElementById('modalConfirmPackage').innerText = document.getElementById('chkPackage').innerText;
+            document.getElementById('modalConfirmBank').innerText = banco;
+            document.getElementById('modalConfirmRef').innerText = referencia;
+            document.getElementById('modalConfirmTotal').innerText = document.getElementById('chkTotalBs').innerText;
+
+            document.getElementById('modalConfirmacion').style.display = 'flex';
+        }
+
+        function cerrarVerificacionModal() {
+            document.getElementById('modalConfirmacion').style.display = 'none';
+        }
+
+        async function ejecutarPagoFinal() {
+            cerrarVerificacionModal();
+
+            document.getElementById('mainCheckout').style.display = 'none';
+            document.getElementById('btnBackNav').style.display = 'none';
+
+            const loadingScreen = document.getElementById('loadingScreen');
+            loadingScreen.style.display = 'flex';
+
+            const game = document.getElementById('chkGame').innerText;
+            const paquete = document.getElementById('chkPackage').innerText;
+            const playerId = document.getElementById('inputPlayerId').value.trim();
+            const banco = document.getElementById('bankSelect').value;
+            const referencia = document.getElementById('referenceNumber').value.trim();
+            const totalBs = document.getElementById('chkTotalBs').innerText;
+
+            const fechaAhora = new Date();
+            const fechaFormateada = fechaAhora.toLocaleDateString('es-VE');
+            const horaFormateada = fechaAhora.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit', hour12: true });
+            const fechaHoraCompleta = `${fechaFormateada} ${horaFormateada}`;
+
+            const nuevaOrden = {
+                ref: referencia,
+                reference: referencia,
+                referencia: referencia,
+                id: playerId,
+                playerId: playerId,
+                player_id: playerId,
+                id_jugador: playerId,
+                user_id: playerId,
+                fecha: fechaFormateada,
+                hora: horaFormateada,
+                time: horaFormateada,
+                date: fechaFormateada,
+                creado: fechaHoraCompleta,
+                fecha_hora: fechaHoraCompleta,
+                created_at: fechaHoraCompleta,
+                juego: game,
+                game: game,
+                paquete: paquete,
+                package: paquete,
+                monto: totalBs,
+                totalBs: totalBs,
+                banco: banco,
+                bank: banco,
+                estado: 'PROCESANDO',
+                status: 'PROCESANDO',
+                finalizado: 'En espera...'
+            };
+
+            let misCompras = JSON.parse(localStorage.getItem('mis_compras')) || [];
+            misCompras.unshift(nuevaOrden);
+            localStorage.setItem('mis_compras', JSON.stringify(misCompras));
+
+            let comprasClientes = JSON.parse(localStorage.getItem('compras_clientes')) || [];
+            comprasClientes.unshift(nuevaOrden);
+            localStorage.setItem('compras_clientes', JSON.stringify(comprasClientes));
+
+            try {
+                await fetch('/api/confirmar-pago', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(nuevaOrden)
+                });
+            } catch (e) {
+                console.log('Almacenado localmente.');
+            }
+
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+                document.getElementById('successScreen').style.display = 'flex';
+
+                localStorage.removeItem('checkout_game');
+                localStorage.removeItem('checkout_playerId');
+                localStorage.removeItem('checkout_package');
+                localStorage.removeItem('checkout_priceUsd');
+            }, 1000);
+        }
+
+        function copiarTexto(elementId, iconElement) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                iconElement.className = 'fa-solid fa-check copy-icon';
+                iconElement.style.color = 'var(--success-color)';
+                setTimeout(() => {
+                    iconElement.className = 'fa-regular fa-copy copy-icon';
+                    iconElement.style.color = 'var(--blue-neon)';
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+</html>

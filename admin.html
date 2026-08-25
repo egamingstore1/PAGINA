@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrador - Tienda Gamer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0b0e14;
+            --card-bg: #161b22;
+            --neon-blue: #00f2fe;
+            --neon-green: #2ecc71;
+            --neon-red: #e74c3c;
+            --text-main: #ffffff;
+            --text-sub: #8a99ad;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .admin-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+        }
+
+        .btn-back {
+            color: var(--text-main);
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .grid-config {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--neon-blue);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 100%;
+            background: #0d1117;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        button {
+            background: linear-gradient(135deg, #00f2fe, #4facfe);
+            color: #000;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--neon-blue);
+        }
+
+        .badge-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .status-procesando, .status-pendiente { background: rgba(241, 196, 15, 0.2); color: #f1c40f; }
+        .status-aprobado, .status-completado { background: rgba(46, 204, 113, 0.2); color: var(--neon-green); }
+        .status-rechazado { background: rgba(231, 76, 60, 0.2); color: var(--neon-red); }
+
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-act {
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            color: #fff;
+        }
+
+        .btn-approve { background: var(--neon-green); color: #000; }
+        .btn-reject { background: var(--neon-red); }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <header>
+            <h1><i class="fa-solid fa-user-shield"></i> Panel Administrador</h1>
+            <a href="index.html" class="btn-back"><i class="fa-solid fa-store"></i> Volver a la Tienda</a>
+        </header>
+
+        <div class="grid-config">
+            <!-- Configuración Tasa USDT -->
+            <div class="card">
+                <h3><i class="fa-solid fa-dollar-sign"></i> Tasa USDT / Bolívares</h3>
+                <p style="font-size: 0.85rem; color: var(--text-sub);">Ajusta la tasa de cambio base para el cálculo de recargas.</p>
+                <div class="input-group">
+                    <input type="number" id="tasaInput" placeholder="Ej: 885.00" step="0.01">
+                    <button onclick="guardarTasa()">Guardar</button>
+                </div>
+            </div>
+
+            <!-- Configuración Cupones -->
+            <div class="card">
+                <h3><i class="fa-solid fa-ticket"></i> Crear Cupón de Descuento</h3>
+                <div class="input-group">
+                    <input type="text" id="couponCode" placeholder="CÓDIGO (Ej: GAMER10)">
+                    <input type="number" id="couponDiscount" placeholder="% Desc." style="width: 80px;">
+                    <button onclick="guardarCupon()">Crear</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Pedidos -->
+        <div class="card">
+            <h3><i class="fa-solid fa-list-check"></i> Registro de Órdenes de Recarga</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente / ID Juego</th>
+                        <th>Juego / Paquete</th>
+                        <th>Referencia</th>
+                        <th>Monto</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="pedidosTableBody">
+                    <!-- Se llena automáticamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    cargarTasa();
+    cargarPedidos();
+});
+
+// Escucha cambios si un cliente realiza una compra desde otra pestaña
+window.addEventListener('storage', () => {
+    cargarPedidos();
+});
+
+function cargarTasa() {
+    const tasaGuardada = localStorage.getItem('tasaUSDT') || '885.00';
+    document.getElementById('tasaInput').value = tasaGuardada;
+}
+
+function guardarTasa() {
+    const nuevaTasa = document.getElementById('tasaInput').value;
+    if (nuevaTasa && nuevaTasa > 0) {
+        localStorage.setItem('tasaUSDT', nuevaTasa);
+        alert('¡Tasa del USDT actualizada a ' + nuevaTasa + ' Bs!');
+    } else {
+        alert('Por favor, ingresa una tasa válida.');
+    }
+}
+
+function guardarCupon() {
+    const codigo = document.getElementById('couponCode').value.trim().toUpperCase();
+    const descuento = parseFloat(document.getElementById('couponDiscount').value);
+
+    if (!codigo || isNaN(descuento)) {
+        alert('Completa el código y el porcentaje de descuento.');
+        return;
+    }
+
+    let cupones = JSON.parse(localStorage.getItem('cuponesStore')) || {};
+    cupones[codigo] = descuento;
+    localStorage.setItem('cuponesStore', JSON.stringify(cupones));
+
+    alert(`Cupón "${codigo}" activado.`);
+    document.getElementById('couponCode').value = '';
+    document.getElementById('couponDiscount').value = '';
+}
+
+// Función multi-clave para buscar compras guardadas bajo cualquier nombre en localStorage
+function obtenerTodasLasOrdenes() {
+    const clavesPosibles = ['ordenesRecarga', 'historialPagos', 'misCompras', 'pedidos', 'compras'];
+    let ordenesEncontradas = [];
+
+    for (let clave of clavesPosibles) {
+        const data = localStorage.getItem(clave);
+        if (data) {
+            try {
+                const parsed = JSON.parse(data);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    ordenesEncontradas = parsed;
+                    break;
+                }
+            } catch (e) {
+                console.error("Error al leer la clave:", clave);
+            }
+        }
+    }
+    return ordenesEncontradas;
+}
+
+function cargarPedidos() {
+    const tbody = document.getElementById('pedidosTableBody');
+    const ordenes = obtenerTodasLasOrdenes();
+
+    if (ordenes.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #8a99ad; padding: 20px;">No hay órdenes registradas.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = '';
+    const ordenesOrdenadas = [...ordenes].reverse();
+
+    ordenesOrdenadas.forEach((ord) => {
+        const tr = document.createElement('tr');
+        const idOrden = String(ord.id || ord.referencia || '');
+        let estado = (ord.estado || 'procesando').toLowerCase();
+        
+        let estadoMostrar = 'PROCESANDO';
+        if (estado === 'aprobado' || estado === 'completado') {
+            estadoMostrar = 'APROBADO';
+            estado = 'aprobado';
+        } else if (estado === 'rechazado') {
+            estadoMostrar = 'RECHAZADO';
+        }
+
+        tr.innerHTML = `
+            <td>
+                <strong>${ord.idUsuario || ord.usuario || 'Cliente'}</strong><br>
+                <small style="color:#8a99ad;">ID Juego: ${ord.playerId || ord.idJuego || 'N/A'}</small><br>
+                <small style="color:var(--neon-blue);">${idOrden}</small>
+            </td>
+            <td>${ord.juego || 'Recarga'}<br><small style="color:#8a99ad;">${ord.paquete || ''}</small></td>
+            <td><code>${ord.referencia || 'S/R'}</code></td>
+            <td><strong>${ord.montoBs || ord.monto || '0'} Bs</strong></td>
+            <td>
+                <span class="badge-status status-${estado}">
+                    ${estadoMostrar}
+                </span>
+            </td>
+            <td>
+                <div class="action-btns">
+                    <button class="btn-act btn-approve" onclick="cambiarEstadoPedido('${idOrden}', 'aprobado')" title="Aprobar"><i class="fa-solid fa-check"></i></button>
+                    <button class="btn-act btn-reject" onclick="cambiarEstadoPedido('${idOrden}', 'rechazado')" title="Rechazar"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function cambiarEstadoPedido(idOrden, nuevoEstado) {
+    const clavesPosibles = ['ordenesRecarga', 'historialPagos', 'misCompras', 'pedidos', 'compras'];
+    let ordenEncontrada = false;
+
+    // Actualizar en la lista principal del sistema
+    clavesPosibles.forEach(clave => {
+        let ordenes = JSON.parse(localStorage.getItem(clave)) || [];
+        if (Array.isArray(ordenes) && ordenes.length > 0) {
+            const index = ordenes.findIndex(o => 
+                String(o.id) === String(idOrden) || 
+                String(o.referencia || '').trim() === String(idOrden).trim()
+            );
+
+            if (index !== -1) {
+                ordenes[index].estado = nuevoEstado;
+                localStorage.setItem(clave, JSON.stringify(ordenes));
+                
+                const refLimpia = String(ordenes[index].referencia || '').trim();
+
+                // Sincronizar en la clave del cliente (historialPagosAdmin)
+                let historialCliente = JSON.parse(localStorage.getItem('historialPagosAdmin')) || [];
+                historialCliente = historialCliente.filter(item => String(item.referencia || '').trim() !== refLimpia);
+                historialCliente.push({
+                    id: ordenes[index].id || idOrden,
+                    referencia: refLimpia,
+                    estado: nuevoEstado.toLowerCase(),
+                    fechaCambio: new Date().toISOString()
+                });
+                localStorage.setItem('historialPagosAdmin', JSON.stringify(historialCliente));
+
+                ordenEncontrada = true;
+            }
+        }
+    });
+
+    if (ordenEncontrada) {
+        cargarPedidos();
+    } else {
+        alert('No se pudo encontrar la orden para actualizar.');
+    }
+}
+    </script>
+</body>
+</html>

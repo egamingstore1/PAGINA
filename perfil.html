@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil | E GAMING STORE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Estilos específicos para armonizar la tipografía y botones del Perfil -->
+    <style>
+        /* Importar fuente Gamer/Cyber si no está en styles.css */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap');
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            color: #f1f5f9;
+        }
+
+        .cyber-main-panel .section-pane {
+            display: none !important;
+        }
+        .cyber-main-panel .section-pane.active {
+            display: block !important;
+        }
+
+        /* Corrección Tipográfica y Visual */
+        .cyber-panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+            color: var(--blue-neon, #00d2ff);
+            text-shadow: 0 0 8px rgba(0, 210, 255, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cyber-user-details h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: #ffffff;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .cyber-id-number {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.85rem;
+            color: #00d2ff;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .input-field-group label {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .input-wrapper input {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Botones alineados a la estética Gamer */
+        .cyber-nav-btn {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .btn-gamer-submit {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #00d2ff, #0072ff);
+            border: none;
+            color: #000;
+            font-weight: 900;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+            transition: 0.3s ease;
+        }
+
+        .btn-gamer-submit:hover {
+            box-shadow: 0 0 25px rgba(0, 210, 255, 0.6);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <header class="navbar">
+        <a href="index.html" class="nav-brand">
+            <img src="img/logo.png" alt="E Gaming Logo" class="nav-logo-img">
+            <span class="nav-brand-text">E GAMING <span>STORE</span></span>
+        </a>
+
+        <a href="index.html" class="top-link" style="background: rgba(0, 210, 255, 0.15); border: 1px solid var(--blue-neon); font-size: 0.85rem; padding: 6px 15px;">
+            <i class="fa-solid fa-arrow-left"></i> Volver a la Tienda
+        </a>
+    </header>
+
+    <!-- Contenedor Principal del Perfil -->
+    <div class="cyber-profile-wrapper">
+        
+        <!-- Tarjeta de Identidad (Barra Izquierda) -->
+        <aside class="cyber-id-card">
+            <div class="cyber-banner-bg"></div>
+
+            <div class="cyber-avatar-box" onclick="openAvatarModal()" title="Cambiar Avatar">
+                <div class="cyber-avatar-img" id="pageAvatar">U</div>
+            </div>
+
+            <div class="cyber-user-details">
+                <h3 id="pageUsername">Cargando...</h3>
+                <span class="cyber-id-number" id="pageClientIDTag">ID: #EG-000000</span>
+            </div>
+
+            <!-- Menú Lateral -->
+            <div class="cyber-nav-menu">
+                <button class="cyber-nav-btn active" id="btnPaneDatos" onclick="showPane('datos')">
+                    <i class="fa-solid fa-id-card"></i> Información de la Cuenta
+                </button>
+                <button class="cyber-nav-btn" id="btnPanePassword" onclick="showPane('password')">
+                    <i class="fa-solid fa-key"></i> Cambiar Contraseña
+                </button>
+                <button class="cyber-nav-btn btn-logout" onclick="logoutUserPerfil()">
+                    <i class="fa-solid fa-power-off"></i> Cerrar Sesión
+                </button>
+            </div>
+        </aside>
+
+        <!-- Panel Derecho -->
+        <main class="cyber-main-panel">
+
+            <!-- APARTADO 1: INFORMACIÓN DE LA CUENTA -->
+            <div class="section-pane active" id="paneDatos" style="display: block;">
+                <div class="cyber-panel-header">
+                    <div class="cyber-panel-title">
+                        <i class="fa-solid fa-user-gear"></i> Información de la Cuenta
+                    </div>
+                </div>
+
+                <form onsubmit="guardarCambiosPerfil(event)">
+                    <div class="grid-2-cols">
+                        <div class="input-field-group">
+                            <label>Nombre de Usuario / Nick</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-user icon-prefix"></i>
+                                <input type="text" id="editUsername" required>
+                            </div>
+                        </div>
+
+                        <div class="input-field-group">
+                            <label>ID de Cliente (No editable)</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-hashtag icon-prefix"></i>
+                                <input type="text" id="editClientID" readonly style="background: rgba(0,0,0,0.4); opacity: 0.6;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2-cols">
+                        <div class="input-field-group">
+                            <label>Correo Electrónico</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-envelope icon-prefix"></i>
+                                <input type="email" id="editEmail" required>
+                            </div>
+                        </div>
+
+                        <div class="input-field-group">
+                            <label>Número de WhatsApp</label>
+                            <div class="input-wrapper">
+                                <i class="fa-brands fa-whatsapp icon-prefix"></i>
+                                <input type="tel" id="editPhone" placeholder="+584120000000" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-gamer-submit" style="width: auto; padding: 12px 30px; margin-top: 15px;">
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+                    </button>
+                </form>
+            </div>
+
+            <!-- APARTADO 2: CAMBIAR CONTRASEÑA -->
+            <div class="section-pane" id="panePassword" style="display: none;">
+                <div class="cyber-panel-header">
+                    <div class="cyber-panel-title">
+                        <i class="fa-solid fa-lock"></i> Cambiar Contraseña
+                    </div>
+                </div>
+
+                <form onsubmit="actualizarPassword(event)">
+                    <div class="input-field-group">
+                        <label>Contraseña Actual</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-key icon-prefix"></i>
+                            <input type="password" id="currentPass" placeholder="Ingresa tu contraseña actual" required>
+                        </div>
+                    </div>
+
+                    <div class="grid-2-cols">
+                        <div class="input-field-group">
+                            <label>Nueva Contraseña</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-lock icon-prefix"></i>
+                                <input type="password" id="newPass" placeholder="Mínimo 6 caracteres" required>
+                            </div>
+                        </div>
+
+                        <div class="input-field-group">
+                            <label>Confirmar Nueva Contraseña</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-check-double icon-prefix"></i>
+                                <input type="password" id="confirmPass" placeholder="Repite la nueva contraseña" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-gamer-submit" style="width: auto; padding: 12px 30px; margin-top: 15px;">
+                        <i class="fa-solid fa-shield-halved"></i> Actualizar Contraseña
+                    </button>
+                </form>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal para Seleccionar Avatar -->
+    <div class="modal-overlay" id="avatarModal">
+        <div class="modal-box" style="max-width: 360px; text-align: center;">
+            <i class="fa-solid fa-xmark close-modal-btn" onclick="closeAvatarModal()"></i>
+            <h3 style="color: var(--blue-neon); font-size: 1.1rem; margin-bottom: 15px; font-family: 'Orbitron', sans-serif;">Selecciona tu Avatar</h3>
+            
+            <div class="avatar-selector-grid">
+                <div class="avatar-option" onclick="setAvatarSymbol('🎮')">🎮</div>
+                <div class="avatar-option" onclick="setAvatarSymbol('⚡')">⚡</div>
+                <div class="avatar-option" onclick="setAvatarSymbol('🔥')">🔥</div>
+                <div class="avatar-option" onclick="setAvatarSymbol('👑')">👑</div>
+                <div class="avatar-option" onclick="setAvatarSymbol('🐉')">🐉</div>
+                <div class="avatar-option" onclick="setAvatarSymbol('💀')">💀</div>
+                <div class="avatar-option" onclick="setAvatarSymbol('🤖')">🤖</div>
+                <div class="avatar-option" onclick="setAvatarSymbol('🎯')">🎯</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            var storedUser = localStorage.getItem('egaming_user');
+            if (!storedUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            var user = JSON.parse(storedUser);
+            var avatarSymbol = user.avatarSymbol || user.name.charAt(0).toUpperCase();
+
+            document.getElementById('pageAvatar').innerText = avatarSymbol;
+            document.getElementById('pageUsername').innerText = user.name;
+            document.getElementById('pageClientIDTag').innerText = 'ID: #' + (user.clientID || 'EG-102030');
+
+            document.getElementById('editUsername').value = user.name;
+            document.getElementById('editEmail').value = user.email;
+            document.getElementById('editPhone').value = user.phone || '';
+            document.getElementById('editClientID').value = user.clientID || 'EG-102030';
+        });
+
+        // Alternar vistas entre Datos y Contraseña
+        function showPane(paneName) {
+            var paneDatos = document.getElementById('paneDatos');
+            var panePassword = document.getElementById('panePassword');
+            var btnDatos = document.getElementById('btnPaneDatos');
+            var btnPassword = document.getElementById('btnPanePassword');
+
+            if (paneName === 'datos') {
+                paneDatos.style.setProperty('display', 'block', 'important');
+                panePassword.style.setProperty('display', 'none', 'important');
+                
+                btnDatos.classList.add('active');
+                btnPassword.classList.remove('active');
+            } else if (paneName === 'password') {
+                paneDatos.style.setProperty('display', 'none', 'important');
+                panePassword.style.setProperty('display', 'block', 'important');
+                
+                btnPassword.classList.add('active');
+                btnDatos.classList.remove('active');
+            }
+        }
+
+        function openAvatarModal() { document.getElementById('avatarModal').classList.add('active'); }
+        function closeAvatarModal() { document.getElementById('avatarModal').classList.remove('active'); }
+
+        function setAvatarSymbol(symbol) {
+            var storedUser = JSON.parse(localStorage.getItem('egaming_user'));
+            storedUser.avatarSymbol = symbol;
+            localStorage.setItem('egaming_user', JSON.stringify(storedUser));
+            
+            document.getElementById('pageAvatar').innerText = symbol;
+            closeAvatarModal();
+        }
+
+        function guardarCambiosPerfil(e) {
+            e.preventDefault();
+            var storedUser = JSON.parse(localStorage.getItem('egaming_user'));
+
+            storedUser.name = document.getElementById('editUsername').value.trim();
+            storedUser.email = document.getElementById('editEmail').value.trim();
+            storedUser.phone = document.getElementById('editPhone').value.trim();
+
+            localStorage.setItem('egaming_user', JSON.stringify(storedUser));
+            alert('¡Información de la cuenta actualizada!');
+            window.location.reload();
+        }
+
+        function actualizarPassword(e) {
+            e.preventDefault();
+            var newPass = document.getElementById('newPass').value;
+            var confirmPass = document.getElementById('confirmPass').value;
+
+            if (newPass !== confirmPass) {
+                alert('Las contraseñas nuevas no coinciden.');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                alert('La contraseña debe tener mínimo 6 caracteres.');
+                return;
+            }
+
+            alert('¡Contraseña actualizada correctamente!');
+            document.getElementById('currentPass').value = '';
+            document.getElementById('newPass').value = '';
+            document.getElementById('confirmPass').value = '';
+        }
+
+        function logoutUserPerfil() {
+            localStorage.removeItem('egaming_user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
